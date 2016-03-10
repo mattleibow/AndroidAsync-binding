@@ -50,7 +50,7 @@ namespace AndroidAsync.Http
 		}
 
 
-		public class WebSocketPingCallback : Java.Lang.Object, IWebSocketPingCallback
+		internal class WebSocketPingCallback : Java.Lang.Object, IWebSocketPingCallback
 		{
 			private readonly Action<string> onPingReceived;
 
@@ -68,7 +68,7 @@ namespace AndroidAsync.Http
 			}
 		}
 
-		public class WebSocketPongCallback : Java.Lang.Object, IWebSocketPongCallback
+		internal class WebSocketPongCallback : Java.Lang.Object, IWebSocketPongCallback
 		{
 			private readonly Action<string> onPongReceived;
 
@@ -86,7 +86,7 @@ namespace AndroidAsync.Http
 			}
 		}
 
-		public class WebSocketStringCallback : Java.Lang.Object, IWebSocketStringCallback
+		internal class WebSocketStringCallback : Java.Lang.Object, IWebSocketStringCallback
 		{
 			private readonly Action<string> onStringAvailable;
 
@@ -105,7 +105,7 @@ namespace AndroidAsync.Http
 		}
 
 
-		public class CompletedCallback : Java.Lang.Object, ICompletedCallback
+		internal class CompletedCallback : Java.Lang.Object, ICompletedCallback
 		{
 			private readonly Action<Exception> onCompleted;
 
@@ -123,7 +123,7 @@ namespace AndroidAsync.Http
 			}
 		}
 
-		public class WebSocketDataCallback : Java.Lang.Object, IDataCallback
+		internal class WebSocketDataCallback : Java.Lang.Object, IDataCallback
 		{
 			private readonly Action<IDataEmitter, ByteBufferList> onDataAvailable;
 
@@ -141,7 +141,7 @@ namespace AndroidAsync.Http
 			}
 		}
 
-		public class WritableCallback : Java.Lang.Object, IWritableCallback
+		internal class WritableCallback : Java.Lang.Object, IWritableCallback
 		{
 			private readonly Action onWriteable;
 

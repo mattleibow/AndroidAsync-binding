@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Android.App;
 using Android.Graphics;
@@ -56,8 +57,8 @@ namespace AndroidAsyncSample
 			};
 
 			Button s = FindViewById<Button> (Resource.Id.sockets);
-			s.Click += delegate {
-				ConnectSockets ();
+			s.Click += async delegate {
+				await ConnectSocketsAsync ();
 			};
 
 			rommanager = FindViewById<ImageView> (Resource.Id.rommanager);
@@ -100,13 +101,10 @@ namespace AndroidAsyncSample
 			});
 		}
 
-		private void GetFile (ImageView iv, string url, string filename)
+		private async Task GetFileAsync (ImageView iv, string url, string filename)
 		{
-			AsyncHttpClient.DefaultInstance.ExecuteFile (new AsyncHttpGet (url), filename, (ex, response, file) => {
-				if (ex != null) {
-					Console.WriteLine (ex);
-					return;
-				}
+			try {
+				var file = await AsyncHttpClient.DefaultInstance.ExecuteFileAsync (new AsyncHttpGet (url), filename);
 
 				Bitmap bitmap = BitmapFactory.DecodeFile (filename);
 				file.Delete ();
@@ -116,10 +114,12 @@ namespace AndroidAsyncSample
 
 				BitmapDrawable bd = new BitmapDrawable (bitmap);
 				AssignImageView (iv, bd);
-			});
+			} catch (Exception ex) {
+				Console.WriteLine (ex);
+			}
 		}
 
-		private void GetChartFile ()
+		private async Task GetChartFileAsync ()
 		{
 			ImageView iv = chart;
 			string filename = GetFileStreamPath (RandomFile ()).AbsolutePath;
@@ -134,24 +134,20 @@ namespace AndroidAsyncSample
 			try {
 				AsyncHttpPost post = new AsyncHttpPost ("http://chart.googleapis.com/chart");
 				post.Body = writer;
-				AsyncHttpClient.DefaultInstance.ExecuteFile (post, filename, (ex, response, file) => {
-					if (ex != null) {
-						Console.WriteLine (ex);
-						return;
-					}
-					Bitmap bitmap = BitmapFactory.DecodeFile (filename);
-					file.Delete ();
-					if (bitmap == null)
-						return;
+				var file = await AsyncHttpClient.DefaultInstance.ExecuteFileAsync (post, filename);
+
+				Bitmap bitmap = BitmapFactory.DecodeFile (filename);
+				file.Delete ();
+				if (bitmap != null) {
 					BitmapDrawable bd = new BitmapDrawable (bitmap);
 					AssignImageView (iv, bd);
-				});
+				}
 			} catch (Exception ex) {
 				Console.WriteLine (ex);
 			}
 		}
 
-		private String RandomFile ()
+		private string RandomFile ()
 		{
 			return new Random ().Next (1000) + ".png";
 		}
@@ -163,10 +159,11 @@ namespace AndroidAsyncSample
 			desksms.SetImageBitmap (null);
 			chart.SetImageBitmap (null);
 
-			GetFile (rommanager, "https://raw.github.com/koush/AndroidAsync/master/rommanager.png", GetFileStreamPath (RandomFile ()).AbsolutePath);
-			GetFile (tether, "https://raw.github.com/koush/AndroidAsync/master/tether.png", GetFileStreamPath (RandomFile ()).AbsolutePath);
-			GetFile (desksms, "https://raw.github.com/koush/AndroidAsync/master/desksms.png", GetFileStreamPath (RandomFile ()).AbsolutePath);
-			GetChartFile ();
+			// these can all run at the same time
+			GetFileAsync (rommanager, "https://raw.github.com/koush/AndroidAsync/master/rommanager.png", GetFileStreamPath (RandomFile ()).AbsolutePath);
+			GetFileAsync (tether, "https://raw.github.com/koush/AndroidAsync/master/tether.png", GetFileStreamPath (RandomFile ()).AbsolutePath);
+			GetFileAsync (desksms, "https://raw.github.com/koush/AndroidAsync/master/desksms.png", GetFileStreamPath (RandomFile ()).AbsolutePath);
+			GetChartFileAsync ();
 
 			Console.WriteLine ("cache hit: " + cacher.CacheHitCount);
 			Console.WriteLine ("cache store: " + cacher.CacheStoreCount);
@@ -174,13 +171,10 @@ namespace AndroidAsyncSample
 			Console.WriteLine ("network: " + cacher.NetworkCount);
 		}
 
-		private void ConnectSockets ()
+		private async Task ConnectSocketsAsync ()
 		{
-			AsyncHttpClient.DefaultInstance.Websocket ("wss://echo.websocket.org", "my-protocol", (ex, webSocket) => {
-				if (ex != null) {
-					Console.WriteLine (ex);
-					return;
-				}
+			try {
+				var webSocket = await AsyncHttpClient.DefaultInstance.WebsocketAsync ("wss://echo.websocket.org", "my-protocol");
 
 				// attach handlers
 				webSocket.SetStringCallback (str => {
@@ -202,8 +196,9 @@ namespace AndroidAsyncSample
 				// send some data
 				webSocket.Send ("a string");
 				webSocket.Send (new byte [] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 });
-			});
-
+			} catch (Exception ex) {
+				Console.WriteLine (ex);
+			}
 		}
 	}
 }

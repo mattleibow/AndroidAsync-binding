@@ -56,6 +56,8 @@
     <Compile Include="Http\RequestCallback.cs" />
     <Compile Include="Http\AsyncHttpClient.WebSocketConnectCallback.cs" />
     <Compile Include="Http\WebSocketExtensions.cs" />
+    <Compile Include="Dns\Dns.cs" />
+    <Compile Include="Future\FutureCallback.cs" />
   </ItemGroup>
   <ItemGroup>
     <TransformFile Include="Transforms\EnumFields.xml" />
@@ -74,6 +76,7 @@
     <Folder Include="Http\" />
     <Folder Include="Future\" />
     <Folder Include="Http\Body\" />
+    <Folder Include="Dns\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.Bindings.targets" />
   <Import Project="..\packages\Xamarin.Android.Bindings.Generators.1.0.0.16\build\MonoAndroid\Xamarin.Android.Bindings.Generators.targets" Condition="Exists('..\packages\Xamarin.Android.Bindings.Generators.1.0.0.16\build\MonoAndroid\Xamarin.Android.Bindings.Generators.targets')" />
