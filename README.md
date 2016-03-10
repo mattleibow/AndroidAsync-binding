@@ -29,7 +29,8 @@ Download [the latest NuGet](https://www.nuget.org/packages/AndroidAsync/):
 
 ```csharp
 string url = "..."; // the URL of the string to download
-AsyncHttpClient.DefaultInstance.GetString(url, (ex, response, str) => {
+AsyncHttpGet get = new AsyncHttpGet(url);
+AsyncHttpClient.DefaultInstance.ExecuteString(get, (ex, response, str) => {
     if (ex != null) {
         Console.WriteLine(ex);
         return;
@@ -44,7 +45,8 @@ AsyncHttpClient.DefaultInstance.GetString(url, (ex, response, str) => {
 ```csharp
 string url = "..."; // the URL of the file to download from
 string filename = "..."; // the location on the device to download to
-AsyncHttpClient.DefaultInstance.GetFile(url, filename, (ex, response, file) => {
+AsyncHttpGet get = new AsyncHttpGet(url);
+AsyncHttpClient.DefaultInstance.GetFile(get, filename, (ex, response, file) => {
     if (ex != null) {
         Console.WriteLine(ex);
         return;
@@ -104,4 +106,54 @@ AsyncHttpClient.DefaultInstance.ExecuteString (post, (ex, response, str) => {
 
     Console.WriteLine("Downloaded a string: " + str);
 });
+```
+
+## Tasks (Await/Async)
+
+All the API calls return a `Task` that can be awaited:
+
+```csharp
+try {
+    string url = "..."; // the URL of the string to download
+    AsyncHttpGet get = new AsyncHttpGet(url);
+    string str = await AsyncHttpClient.DefaultInstance.ExecuteStringAsync(get);
+
+    Console.WriteLine("Downloaded a string: " + str);
+} catch (Exception ex) {
+    Console.WriteLine(ex);
+}
+```
+
+### Cancelling Tasks
+
+A `Task` can also be cancelled using a `CancellationToken`:
+
+```csharp
+// somewhere where everyone can access
+CancellationTokenSource cts = new CancellationTokenSource();
+
+// download something
+string str = await AsyncHttpClient.DefaultInstance.ExecuteStringAsync(get, cts.Token);
+Console.WriteLine("Downloaded a string: " + str);
+
+// somewhere else
+cts.Cancel();
+```
+
+### Other Futures & Tasks
+
+All `IFuture` instances have extension methods that can turn it into a `Task`:
+
+```csharp
+IFuture future = ...;
+JavaObjectType result = await future.AsTask<JavaObjectType>();
+```
+
+These tasks can also be allowed to cancel:
+
+```csharp
+CancellationTokenSource cts = new CancellationTokenSource();
+
+IFuture future = ...;
+JavaObjectType result = await future.AsTask<JavaObjectType>(cts.Token);
 ```
