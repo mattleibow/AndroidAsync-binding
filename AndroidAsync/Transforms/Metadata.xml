@@ -1,0 +1,152 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+	<!-- remove the deprectated socket.io stuff -->
+	<remove-node path="/api/package[@name='com.koushikdutta.async.http.socketio']" />
+	<remove-node path="/api/package[@name='com.koushikdutta.async.http.socketio.transport']" />
+
+	<!-- update namespaces -->
+	<attr path="/api/package[@name='com.koushikdutta.async']" name="managedName">AndroidAsync</attr>
+	<attr path="/api/package[@name='com.koushikdutta.async.callback']" name="managedName">AndroidAsync.Callback</attr>
+	<attr path="/api/package[@name='com.koushikdutta.async.dns']" name="managedName">AndroidAsync.Dns</attr>
+	<attr path="/api/package[@name='com.koushikdutta.async.future']" name="managedName">AndroidAsync.Future</attr>
+	<attr path="/api/package[@name='com.koushikdutta.async.http']" name="managedName">AndroidAsync.Http</attr>
+	<attr path="/api/package[@name='com.koushikdutta.async.http.body']" name="managedName">AndroidAsync.Http.Body</attr>
+	<attr path="/api/package[@name='com.koushikdutta.async.http.cache']" name="managedName">AndroidAsync.Http.Cache</attr>
+	<attr path="/api/package[@name='com.koushikdutta.async.http.callback']" name="managedName">AndroidAsync.Http.Callback</attr>
+	<attr path="/api/package[@name='com.koushikdutta.async.http.filter']" name="managedName">AndroidAsync.Http.Filter</attr>
+	<attr path="/api/package[@name='com.koushikdutta.async.http.server']" name="managedName">AndroidAsync.Http.Server</attr>
+	<attr path="/api/package[@name='com.koushikdutta.async.http.spdy']" name="managedName">AndroidAsync.Http.Spdy</attr>
+	<attr path="/api/package[@name='com.koushikdutta.async.parser']" name="managedName">AndroidAsync.Parser</attr>
+	<attr path="/api/package[@name='com.koushikdutta.async.stream']" name="managedName">AndroidAsync.Stream</attr>
+	<attr path="/api/package[@name='com.koushikdutta.async.util']" name="managedName">AndroidAsync.Util</attr>
+	<attr path="/api/package[@name='com.koushikdutta.async.wrapper']" name="managedName">AndroidAsync.Wrapper</attr>
+	
+	<!-- avoid naming conflicts with .NET -->
+	<attr path="/api/package[@name='com.koushikdutta.async']/class[@name='Util']" name="managedName">Utils</attr>
+	<attr path="/api/package[@name='com.koushikdutta.async.http.cache']/interface[@name='HeaderParser.CacheControlHandler']/method[@name='handle']" name="managedName">HandleCache</attr>
+
+	<!-- fix field/property name conflicts -->
+	<attr path="/api/package[@name='com.koushikdutta.async.http']/class[starts-with(@name, 'AsyncHttp')]/field[@name='METHOD']" name="managedName">METHOD</attr>
+	<attr path="/api/package[@name='com.koushikdutta.async.http']/class[@name='ProtocolVersion']/field[@name='major']" name="managedName">major</attr>
+	<attr path="/api/package[@name='com.koushikdutta.async.http']/class[@name='ProtocolVersion']/field[@name='minor']" name="managedName">minor</attr>
+	<attr path="/api/package[@name='com.koushikdutta.async.http']/class[@name='ProtocolVersion']/field[@name='protocol']" name="managedName">protocol</attr>
+	<attr path="/api/package[@name='com.koushikdutta.async.http.body']/class[substring(@name, string-length(@name)-string-length('Body')+1)='Body']/field[@name='CONTENT_TYPE']" name="managedName">CONTENT_TYPE</attr>
+
+	<!-- fix inheritance conflicts -->
+	<attr path="/api/package[@name='com.koushikdutta.async']/class[@name='FilteredDataEmitter']/method[@name='setDataEmitter']" name="propertyName"></attr>
+	<attr path="/api/package[@name='com.koushikdutta.async.future']/class[@name='SimpleCancellable']/method[@name='setParent']" name="managedReturn">AndroidAsync.Future.IDependentCancellable</attr>
+	<attr path="/api/package[@name='com.koushikdutta.async.future']/class[@name='SimpleFuture']/method[@name='setCallback']" name="managedReturn">AndroidAsync.Future.IFuture</attr>
+
+	<!-- fix class with interface structures not supported by .NET -->
+	<!-- FileCallback -->
+	<add-node path="/api/package[@name='com.koushikdutta.async.http']/class[@name='AsyncHttpClient.FileCallback']">
+		<method abstract="false" deprecated="not deprecated" final="false" name="onConnect" native="false" return="void" static="false" synchronized="false" visibility="public">
+			<parameter name="response" type="com.koushikdutta.async.http.AsyncHttpResponse" />
+		</method>
+		<method abstract="false" deprecated="not deprecated" final="false" name="onProgress" native="false" return="void" static="false" synchronized="false" visibility="public">
+			<parameter name="response" type="com.koushikdutta.async.http.AsyncHttpResponse" />
+			<parameter name="downloaded" type="long" />
+			<parameter name="total" type="long" />
+		</method>
+		<method abstract="true" deprecated="not deprecated" final="false" name="onCompleted" native="false" return="void" static="false" synchronized="false" visibility="public">
+			<parameter name="exception" type="java.lang.Exception" />
+			<parameter name="source" type="com.koushikdutta.async.http.AsyncHttpResponse" />
+			<parameter name="result" type="java.io.File" />
+		</method>
+	</add-node>
+	<attr path="/api/package[@name='com.koushikdutta.async.http']/class[@name='AsyncHttpClient.FileCallback']" name="extends">java.lang.Object</attr>
+	<!-- StringCallback -->
+	<add-node path="/api/package[@name='com.koushikdutta.async.http']/class[@name='AsyncHttpClient.StringCallback']">
+		<method abstract="false" deprecated="not deprecated" final="false" name="onConnect" native="false" return="void" static="false" synchronized="false" visibility="public">
+			<parameter name="response" type="com.koushikdutta.async.http.AsyncHttpResponse" />
+		</method>
+		<method abstract="false" deprecated="not deprecated" final="false" name="onProgress" native="false" return="void" static="false" synchronized="false" visibility="public">
+			<parameter name="response" type="com.koushikdutta.async.http.AsyncHttpResponse" />
+			<parameter name="downloaded" type="long" />
+			<parameter name="total" type="long" />
+		</method>
+		<method abstract="true" deprecated="not deprecated" final="false" name="onCompleted" native="false" return="void" static="false" synchronized="false" visibility="public">
+			<parameter name="exception" type="java.lang.Exception" />
+			<parameter name="source" type="com.koushikdutta.async.http.AsyncHttpResponse" />
+			<parameter name="result" type="java.lang.String" />
+		</method>
+	</add-node>
+	<attr path="/api/package[@name='com.koushikdutta.async.http']/class[@name='AsyncHttpClient.StringCallback']" name="extends">java.lang.Object</attr>
+	<!-- DownloadCallback -->
+	<add-node path="/api/package[@name='com.koushikdutta.async.http']/class[@name='AsyncHttpClient.DownloadCallback']">
+		<method abstract="false" deprecated="not deprecated" final="false" name="onConnect" native="false" return="void" static="false" synchronized="false" visibility="public">
+			<parameter name="response" type="com.koushikdutta.async.http.AsyncHttpResponse" />
+		</method>
+		<method abstract="false" deprecated="not deprecated" final="false" name="onProgress" native="false" return="void" static="false" synchronized="false" visibility="public">
+			<parameter name="response" type="com.koushikdutta.async.http.AsyncHttpResponse" />
+			<parameter name="downloaded" type="long" />
+			<parameter name="total" type="long" />
+		</method>
+		<method abstract="true" deprecated="not deprecated" final="false" name="onCompleted" native="false" return="void" static="false" synchronized="false" visibility="public">
+			<parameter name="exception" type="java.lang.Exception" />
+			<parameter name="source" type="com.koushikdutta.async.http.AsyncHttpResponse" />
+			<parameter name="result" type="com.koushikdutta.async.ByteBufferList" />
+		</method>
+	</add-node>
+	<attr path="/api/package[@name='com.koushikdutta.async.http']/class[@name='AsyncHttpClient.DownloadCallback']" name="extends">java.lang.Object</attr>
+	<!-- JSONArrayCallback -->
+	<add-node path="/api/package[@name='com.koushikdutta.async.http']/class[@name='AsyncHttpClient.JSONArrayCallback']">
+		<method abstract="false" deprecated="not deprecated" final="false" name="onConnect" native="false" return="void" static="false" synchronized="false" visibility="public">
+			<parameter name="response" type="com.koushikdutta.async.http.AsyncHttpResponse" />
+		</method>
+		<method abstract="false" deprecated="not deprecated" final="false" name="onProgress" native="false" return="void" static="false" synchronized="false" visibility="public">
+			<parameter name="response" type="com.koushikdutta.async.http.AsyncHttpResponse" />
+			<parameter name="downloaded" type="long" />
+			<parameter name="total" type="long" />
+		</method>
+		<method abstract="true" deprecated="not deprecated" final="false" name="onCompleted" native="false" return="void" static="false" synchronized="false" visibility="public">
+			<parameter name="exception" type="java.lang.Exception" />
+			<parameter name="source" type="com.koushikdutta.async.http.AsyncHttpResponse" />
+			<parameter name="result" type="org.json.JSONArray" />
+		</method>
+	</add-node>
+	<attr path="/api/package[@name='com.koushikdutta.async.http']/class[@name='AsyncHttpClient.JSONArrayCallback']" name="extends">java.lang.Object</attr>
+	<!-- JSONObjectCallback -->
+	<add-node path="/api/package[@name='com.koushikdutta.async.http']/class[@name='AsyncHttpClient.JSONObjectCallback']">
+		<method abstract="false" deprecated="not deprecated" final="false" name="onConnect" native="false" return="void" static="false" synchronized="false" visibility="public">
+			<parameter name="response" type="com.koushikdutta.async.http.AsyncHttpResponse" />
+		</method>
+		<method abstract="false" deprecated="not deprecated" final="false" name="onProgress" native="false" return="void" static="false" synchronized="false" visibility="public">
+			<parameter name="response" type="com.koushikdutta.async.http.AsyncHttpResponse" />
+			<parameter name="downloaded" type="long" />
+			<parameter name="total" type="long" />
+		</method>
+		<method abstract="true" deprecated="not deprecated" final="false" name="onCompleted" native="false" return="void" static="false" synchronized="false" visibility="public">
+			<parameter name="exception" type="java.lang.Exception" />
+			<parameter name="source" type="com.koushikdutta.async.http.AsyncHttpResponse" />
+			<parameter name="result" type="org.json.JSONObject" />
+		</method>
+	</add-node>
+	<attr path="/api/package[@name='com.koushikdutta.async.http']/class[@name='AsyncHttpClient.JSONObjectCallback']" name="extends">java.lang.Object</attr>
+	<!-- remove unsupported type -->
+	<remove-node path="/api/package[@name='com.koushikdutta.async.http']/class[@extends='com.koushikdutta.async.http.AsyncHttpClient.RequestCallbackBase']" />
+	<remove-node path="/api/package[@name='com.koushikdutta.async.http']/class[@name='AsyncHttpClient.RequestCallbackBase']" />
+	
+	<!-- fix .NET Stream and Java ImputStream issues -->
+	<attr path="/api/package[@name='com.koushikdutta.async.http.body']/class[@name='StreamBody']/method[@name='get']" name="managedName">GetAsStream</attr>
+	<attr path="/api/package[@name='com.koushikdutta.async.http.body']/class[@name='StreamBody']/method[@name='get']" name="propertyName" />
+
+	<!-- fix conflict with two interfaces and the same member name -->
+	<remove-node path="/api/package[@name='com.koushikdutta.async.future']/interface[@name='Future']/implements[@name='java.util.concurrent.Future']" />
+
+    <!-- remove inner classes that are private -->
+	<remove-node path="/api/package[@name='com.koushikdutta.async']/class[@visibility='' and contains(@name, '.')]" />
+	<remove-node path="/api/package[@name='com.koushikdutta.async']/interface[@visibility='' and contains(@name, '.')]" />
+	
+    <!-- make outer classers that have no visibility public -->
+	<attr path="/api/package/class[@visibility='' and not(contains(@name, '.'))]" name="visibility">public</attr>
+	<attr path="/api/package/interface[@visibility='' and not(contains(@name, '.'))]" name="visibility">public</attr>
+
+    <!-- improvements to the .NET API -->
+	<!-- callback getters/setters shoud be methods so as to support delegate overloads -->
+	<attr path="/api/package[starts-with(@name,'com.koushikdutta.async')]/interface/method[starts-with(@name,'get') and substring(@name, string-length(@name)-string-length('Callback')+1)='Callback']" name="propertyName" />
+	<attr path="/api/package[starts-with(@name,'com.koushikdutta.async')]/interface/method[starts-with(@name,'set') and substring(@name, string-length(@name)-string-length('Callback')+1)='Callback']" name="propertyName" />
+	<attr path="/api/package[starts-with(@name,'com.koushikdutta.async')]/class/method[starts-with(@name,'get') and substring(@name, string-length(@name)-string-length('Callback')+1)='Callback']" name="propertyName" />
+	<attr path="/api/package[starts-with(@name,'com.koushikdutta.async')]/class/method[starts-with(@name,'set') and substring(@name, string-length(@name)-string-length('Callback')+1)='Callback']" name="propertyName" />
+
+</metadata>

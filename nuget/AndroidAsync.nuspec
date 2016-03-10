@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+    <metadata>
+        <id>AndroidAsync</id>
+        <version>2.1.7</version>
+        <title>AndroidAsync</title>
+        <authors>.NET Development Addict</authors>
+        <licenseUrl>https://raw.githubusercontent.com/mattleibow/AndroidAsync-binding/master/LICENSE</licenseUrl>
+        <projectUrl>https://github.com/mattleibow/AndroidAsync-binding</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Asynchronous socket, http (client+server), websocket, and socket.io library for android. Based on nio, not threads.</description>
+        <summary>Asynchronous socket, http (client+server), websocket, and socket.io library for android. Based on nio, not threads.</summary>
+        <copyright>.NET Development Addict</copyright>
+    </metadata>
+    <files>
+        <file src="output/AndroidAsync.dll" target="lib\MonoAndroid\AndroidAsync.dll" />
+    </files>
+</package>
