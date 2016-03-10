@@ -68,7 +68,13 @@ namespace AndroidAsync.Http
 			return ExecuteJSONObject (req, new ActionJSONObjectCallback (onConnect, onProgress, onCompleted));
 		}
 
-		//public IFuture ExecuteString (AsyncHttpRequest req, AsyncHttpClient.StringCallback callback);
+		public IFuture ExecuteString (AsyncHttpRequest req,
+		                              Action<Exception, IAsyncHttpResponse, string> onCompleted,
+		                              Action<IAsyncHttpResponse> onConnect = null,
+		                              Action<IAsyncHttpResponse, long, long> onProgress = null)
+		{
+			return ExecuteString (req, new ActionStringCallback (onConnect, onProgress, onCompleted));
+		}
 
 		public IFuture Websocket (AsyncHttpRequest req,
 								  string protocol,
@@ -210,8 +216,8 @@ namespace AndroidAsync.Http
 			private readonly Action<Exception, IAsyncHttpResponse, ByteBufferList> onCompleted;
 
 			public ActionDownloadCallback (Action<IAsyncHttpResponse> onConnect = null,
-										   Action<IAsyncHttpResponse, long, long> onProgress = null,
-										   Action<Exception, IAsyncHttpResponse, ByteBufferList> onCompleted = null)
+			                               Action<IAsyncHttpResponse, long, long> onProgress = null,
+			                               Action<Exception, IAsyncHttpResponse, ByteBufferList> onCompleted = null)
 			{
 				this.onConnect = onConnect;
 				this.onProgress = onProgress;
@@ -235,6 +241,46 @@ namespace AndroidAsync.Http
 			}
 
 			public override void OnCompleted (Java.Lang.Exception exception, IAsyncHttpResponse s, ByteBufferList t)
+			{
+				var handler = onCompleted;
+				if (handler != null) {
+					handler (exception, s, t);
+				}
+			}
+		}
+
+		private class ActionStringCallback : StringCallback
+		{
+			private readonly Action<IAsyncHttpResponse> onConnect;
+			private readonly Action<IAsyncHttpResponse, long, long> onProgress;
+			private readonly Action<Exception, IAsyncHttpResponse, string> onCompleted;
+
+			public ActionStringCallback (Action<IAsyncHttpResponse> onConnect = null,
+			                             Action<IAsyncHttpResponse, long, long> onProgress = null,
+			                             Action<Exception, IAsyncHttpResponse, string> onCompleted = null)
+			{
+				this.onConnect = onConnect;
+				this.onProgress = onProgress;
+				this.onCompleted = onCompleted;
+			}
+
+			public override void OnConnect (IAsyncHttpResponse response)
+			{
+				var handler = onConnect;
+				if (handler != null) {
+					handler (response);
+				}
+			}
+
+			public override void OnProgress (IAsyncHttpResponse response, long downloaded, long total)
+			{
+				var handler = onProgress;
+				if (handler != null) {
+					handler (response, downloaded, total);
+				}
+			}
+
+			public override void OnCompleted (Java.Lang.Exception exception, IAsyncHttpResponse s, string t)
 			{
 				var handler = onCompleted;
 				if (handler != null) {
